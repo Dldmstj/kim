@@ -1,0 +1,58 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+<% request.setCharacterEncoding("utf-8"); %>
+
+<%@ page import ="java.sql.*" %>
+<%
+	Statement stmt = null;
+	ResultSet rs = null;
+	Class.forName("com.mysql.jdbc.Driver");
+
+	Connection conn = 
+			DriverManager.getConnection("jdbc:mysql://localhost/todos?serverTimezone=UTC","root","cs1234");
+
+	stmt = conn.createStatement();
+	if(stmt.execute("select * from todo")){
+		rs = stmt.getResultSet();
+	}
+%> 
+   
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<div>
+
+	<h1>todo</h1>
+	<hr><!-- 줄 -->
+	1.buy milk<br><!-- 띄어쓰기 -->
+	2.walk with doggy<br>
+	<hr>
+	<form method ="post" action="write.jsp"></form>
+	<input type="text" name="todo-item"/>
+	<input type="submit" value="작성"/>
+	
+	<h1>todo</h1>
+	<hr><!-- 줄 -->
+<%
+	while(rs.next()){
+		out.println(rs.getInt("id") + " : " + rs.getString("item"));
+	}
+	rs.close();
+	stmt.close();
+	conn.close();
+%>
+	<hr>
+	<form method ="post" action="write.jsp"></form>
+	<input type="text" name="todo-item"/>
+	<input type="submit" value="작성"/>
+	
+</div>
+
+
+</body>
+</html>
